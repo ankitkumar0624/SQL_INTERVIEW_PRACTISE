@@ -1,0 +1,45 @@
+You are given a table that stores job execution logs with two columns:
+
+job_status (either success or fail)
+
+run_date (date when the job ran)
+
+Your task is to group consecutive days having the same status into a single range and return:
+
+job_status
+
+start_date of the streak
+
+end_date of the streak
+
+📥 Input
+
+JobStatus Table
+
+job_status	run_date
+success	01-08-2025
+success	02-08-2025
+fail	03-08-2025
+fail	04-08-2025
+success	13-08-2025
+📤 Output
+job_status	start_date	end_date
+success	01-08-2025	02-08-2025
+fail	03-08-2025	04-08-2025
+success	13-08-2025	13-08-2025
+✅ SQL Solution
+WITH Marked AS (
+    SELECT 
+        job_status,
+        run_date,
+        ROW_NUMBER() OVER (ORDER BY run_date) -
+        ROW_NUMBER() OVER (PARTITION BY job_status ORDER BY run_date) AS grp
+    FROM JobStatus
+)
+SELECT 
+    job_status,
+    MIN(run_date) AS start_date,
+    MAX(run_date) AS end_date
+FROM Marked
+GROUP BY job_status, grp
+ORDER BY start_date;
