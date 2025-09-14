@@ -1,0 +1,65 @@
+Problem Statement:
+
+You are given a table of pizza toppings with their respective ingredient costs.
+Your task is to generate all possible 3-topping pizzas and calculate the total cost of each pizza.
+
+Each pizza must contain exactly 3 distinct toppings.
+
+The cost of a pizza is the sum of the costs of its 3 toppings.
+
+The output should list all possible 3-topping pizzas along with their total cost.
+
+The result must be sorted:
+
+By highest total cost first (descending order).
+
+If two pizzas have the same total cost, sort them by toppings in alphabetical order (first topping, then second, then third).
+
+📥 Input Format (SQL Table)
+
+Toppings table
+
+topping_name	ingredient_cost
+Pepperoni	0.50
+Sausage	0.70
+Chicken	0.55
+Extra Cheese	0.40
+📤 Output Format
+
+Output table (Pizza combinations and total cost):
+
+Pizza	Cost
+Chicken,Pepperoni,Sausage	1.75
+Chicken,Extra Cheese,Sausage	1.65
+Extra Cheese,Pepperoni,Sausage	1.60
+Chicken,Extra Cheese,Pepperoni	1.45
+✅ Solution (SQL)
+-- Step 1: Generate all 3-combination toppings using self-joins
+WITH Combos AS (
+    SELECT 
+        t1.topping_name AS topping1,
+        t2.topping_name AS topping2,
+        t3.topping_name AS topping3,
+        t1.ingredient_cost + t2.ingredient_cost + t3.ingredient_cost AS total_cost
+    FROM Toppings t1
+    JOIN Toppings t2 ON t1.topping_name < t2.topping_name
+    JOIN Toppings t3 ON t2.topping_name < t3.topping_name
+)
+
+-- Step 2: Format pizza name and sort results
+SELECT 
+    CONCAT(topping1, ',', topping2, ',', topping3) AS Pizza,
+    total_cost AS Cost
+FROM Combos
+ORDER BY 
+    total_cost DESC,
+    topping1, topping2, topping3;
+
+
+👉 Explanation of sorting logic:
+
+t1.topping_name < t2.topping_name and t2.topping_name < t3.topping_name ensure we don’t repeat or reorder toppings (so A,B,C appears once, not multiple times).
+
+ORDER BY total_cost DESC sorts by highest cost first.
+
+If two pizzas have the same cost, toppings are alphabetically ordered.
