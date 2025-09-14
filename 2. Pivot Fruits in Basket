@@ -1,0 +1,79 @@
+We are given a table of persons and the basket of fruits they have.
+Each basket contains a comma-separated list of fruits.
+
+We need to transform this data into a pivoted table where:
+
+Each fruit becomes a separate column (Apple, Mango, Orange, Guava, Cherry).
+
+The value should be "Yes" if the person has that fruit in their basket, otherwise "No".
+
+📂 Input
+
+Table Name: BasketTable
+
+Person	Basket
+A	Apple,Mango,Orange
+B	Apple
+C	Guava,Cherry
+D	Mango,Cherry,Orange
+✅ Expected Output
+Person	Apple	Mango	Orange	Guava	Cherry
+A	Yes	Yes	Yes	No	No
+B	Yes	No	No	No	No
+C	No	No	No	Yes	Yes
+D	No	Yes	Yes	No	Yes
+📝 SQL Solution
+
+Here we can use CASE WHEN with LIKE to check if each fruit is present inside the Basket column:
+
+SELECT 
+    Person,
+    CASE WHEN Basket LIKE '%Apple%' THEN 'Yes' ELSE 'No' END AS Apple,
+    CASE WHEN Basket LIKE '%Mango%' THEN 'Yes' ELSE 'No' END AS Mango,
+    CASE WHEN Basket LIKE '%Orange%' THEN 'Yes' ELSE 'No' END AS Orange,
+    CASE WHEN Basket LIKE '%Guava%' THEN 'Yes' ELSE 'No' END AS Guava,
+    CASE WHEN Basket LIKE '%Cherry%' THEN 'Yes' ELSE 'No' END AS Cherry
+FROM BasketTable;
+
+
+✅ This works because:
+
+LIKE '%Apple%' checks if "Apple" exists anywhere in the Basket string.
+
+If found → "Yes", otherwise "No".
+
+
+
+---------DYNAMIC SQL SOLUTION
+
+-- Step 1: Split the basket into individual rows (normalize data)
+WITH SplitData AS (
+    SELECT 
+        Person,
+        LTRIM(RTRIM(value)) AS Fruit
+    FROM BasketTable
+    CROSS APPLY STRING_SPLIT(Basket, ',')
+)
+
+-- Step 2: Generate dynamic pivot
+DECLARE @cols NVARCHAR(MAX), @query NVARCHAR(MAX);
+
+-- Collect unique fruit names into columns
+SELECT @cols = STRING_AGG(QUOTENAME(Fruit), ',')
+FROM (SELECT DISTINCT Fruit FROM SplitData) AS F;
+
+-- Build dynamic SQL
+SET @query = '
+SELECT Person, ' + @cols + '
+FROM (
+    SELECT Person, Fruit, ''Yes'' AS val
+    FROM SplitData
+) AS src
+PIVOT (
+    MAX(val) FOR Fruit IN (' + @cols + ')
+) AS pvt
+ORDER BY Person;
+';
+
+-- Step 3: Execute dynamic query
+EXEC sp_executesql @query;
