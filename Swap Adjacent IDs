@@ -1,0 +1,29 @@
+Problem Description
+
+You are given a table swap that contains items with sequential integer IDs. The task is to "swap" items in pairs:
+
+create table swap (
+  items varchar(50),
+  id int
+);
+
+insert into swap (items,id) values
+('a',1),
+('b',2),
+('c',3),
+('d',4),
+('e',5);
+
+
+with swapping as (
+  select *,
+    case 
+      when (select max(id) from swap) % 2 = 1 then id
+      when id % 2 = 1 then id + 1
+      else id - 1 
+    end as swap_id
+  from swap
+)
+select a.items, b.swap_id
+from swapping a 
+inner join swap b on 1=1 and a.id=b.id;
