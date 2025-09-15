@@ -1,0 +1,27 @@
+📥 Example Input (input_table)
+pid	year	date
+101	2019	2019-01-01
+101	2020	2020-01-01
+101	2021	2021-01-01
+101	2023	2023-01-01
+102	2018	2018-01-01
+102	2019	2019-01-01
+103	2021	2021-01-01
+103	2023	2023-01-01
+
+📤 Final Output
+pid
+101
+
+
+WITH cte AS (
+    SELECT 
+        pid,
+        year,
+        (year - ROW_NUMBER() OVER (PARTITION BY pid ORDER BY date)) AS grp
+    FROM input_table
+)
+SELECT DISTINCT pid
+FROM cte 
+GROUP BY pid, grp 
+HAVING COUNT(*) > 2;
