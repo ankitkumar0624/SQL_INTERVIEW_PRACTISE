@@ -1,0 +1,46 @@
+📘 1. Learning Path for SQL Date & String Functions
+🔹 Step 1: Basics
+
+Learn how to extract and format values.
+
+YEAR(date), MONTH(date), DAY(date)
+
+DATEPART(), DATENAME()
+
+LEN(), UPPER(), LOWER(), LTRIM(), RTRIM(), SUBSTRING()
+
+👉 Example:
+
+SELECT YEAR('2020-06-15') AS year, 
+       MONTH('2020-06-15') AS month,
+       LEN('   hello  ') AS length,
+       LTRIM('   hello  ') AS left_trimmed;
+
+🔹 Step 2: Intermediate
+
+Learn arithmetic and manipulation
+
+DATEADD(), DATEDIFF(), EOMONTH()
+
+REPLACE(), CHARINDEX(), LEFT(), RIGHT()
+
+👉 Example:
+
+SELECT DATEADD(DAY, 7, '2020-06-15') AS plus_7_days,
+       DATEDIFF(DAY, '2020-06-01', '2020-06-15') AS days_between,
+       REPLACE('SQL IS FUN', 'FUN', 'POWERFUL') AS replaced;
+
+🔹 Step 3: Advanced
+
+Work with formatting & conversion
+
+FORMAT(), CONVERT(), CAST()
+
+STUFF(), PATINDEX()
+
+Time-zone aware: SYSDATETIMEOFFSET(), SWITCHOFFSET()
+
+👉 Example:
+
+SELECT FORMAT(GETDATE(), 'yyyy-MM-dd') AS formatted_date,
+       STUFF('123456', 2, 3, 'XYZ') AS stuffed;
