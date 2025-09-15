@@ -1,0 +1,64 @@
+You are given a table where each row may contain:
+
+A single number, or
+
+Multiple comma-separated numbers.
+
+Your task is:
+
+Split the values into individual rows.
+
+Generate all pairs such that for every distinct pair (a, b) with a < b, output them as (b, a) (like combinations).
+
+📥 Input Table
+cola
+1,2
+3
+4
+📤 Expected Output
+cola	colb
+2	1
+3	1
+3	2
+4	1
+4	2
+4	3
+
+WITH split_data AS (
+    SELECT 
+        CAST(LTRIM(RTRIM(value)) AS INT) AS final_cola
+    FROM input_table
+    CROSS APPLY string_split(cola, ',')
+)
+SELECT 
+    a2.final_cola AS cola,   -- larger value
+    a1.final_cola AS colb    -- smaller value
+FROM split_data a1
+JOIN split_data a2 
+    ON a1.final_cola < a2.final_cola
+ORDER BY cola, colb;
+
+
+What is CROSS APPLY?
+
+CROSS APPLY is like a JOIN, but instead of joining two tables directly, it allows you to join each row of 
+a table with the result of a table-valued function (or subquery) that depends on that row.
+
+Example 3 – Difference between CROSS APPLY and OUTER APPLY
+
+CROSS APPLY works like an INNER JOIN → if the function/subquery returns nothing, that row is excluded.
+
+OUTER APPLY works like a LEFT JOIN → keeps the row even if function/subquery returns nothing.
+
+
+
+
+
+
+
+
+
+
+
+
+
