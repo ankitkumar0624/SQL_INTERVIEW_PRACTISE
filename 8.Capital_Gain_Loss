@@ -1,0 +1,37 @@
+The capital gain/loss of stock is after buying or selling that particular stock one or multiple times.
+Return the table in capital_gain_loss in descending order.
+
+
+
+drop table if exists stock;
+
+create table stock (
+  stock_name varchar(100),
+  stock_day varchar(100),
+  operation varchar(100),
+  price integer
+);
+
+
+insert into stock values
+('tata','1','buy',1000),
+('tata','3','buy',4000),
+('tata','4','sell',6000),
+('tesla','1','buy',2000),
+('tesla','2','sell',1000)
+;
+
+select * from stock ;
+
+
+with stock_total as (select
+stock_name,
+operation,
+case when operation='buy' then (-1*price) else price end as new_price
+from stock )
+
+select distinct
+stock_name,
+sum(new_price) as capital_loss_gain
+from stock_total
+group by stock_name order by capital_loss_gain desc;
