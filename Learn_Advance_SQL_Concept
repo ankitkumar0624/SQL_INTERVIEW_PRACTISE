@@ -1,0 +1,23 @@
+1.) What is FIND_IN_SET() in MySQL?
+
+FIND_IN_SET(str, strlist) → checks if a string is present inside a comma-separated list.
+Returns the position (1-based index) if found.
+Returns 0 if not found.
+Returns NULL if any argument is NULL.
+
+example ::
+select find_in_set('apple', 'apple,orange,mango');   -- returns 1
+select find_in_set('mango', 'apple,orange,mango');   -- returns 3
+select find_in_set('grapes', 'apple,orange,mango');  -- returns 0
+select 
+    person_name,
+    case when find_in_set('apple', fruits_name) > 0 then 'Yes' else 'No' end as Apple,
+    case when find_in_set('orange', fruits_name) > 0 then 'Yes' else 'No' end as Orange
+from basket;
+
+
+2.) IF(condition, value_if_true, value_if_false)
+select 
+    name,
+    if(score >= 90, 'Excellent', 'Not Excellent') as performance
+from students;
