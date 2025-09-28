@@ -4,6 +4,7 @@ its own column (Apple, Mango, Orange, Guava, Cherry)
 and the values should be ‘Yes’ if the person has 
 that fruit in their basket, otherwise ‘No’.
 
+--Approach 1
 drop table if exists basket;
 
 create table basket
@@ -36,3 +37,17 @@ select
   max(case when fruit_name='strawberry' then 'YES' else 'NO' end) as strawberry
 from split_fruits
 group by person_name;
+
+
+
+--Approach 2
+
+select distinct
+person_name,
+if(find_in_set('apple',fruits_name)>0,'YES','NO') as 'apple',
+if(find_in_set('orange',fruits_name)>0,'YES','NO') as 'orange',
+if(find_in_set('mango',fruits_name)>0,'YES','NO') as 'mango',
+if(find_in_set('grapes',fruits_name)>0,'YES','NO') as 'grapes',
+if(find_in_set('papaya',fruits_name)>0,'YES','NO') as 'papaya',
+if(find_in_set('strawberry',fruits_name)>0,'YES','NO') as 'strawberry'
+from basket;
