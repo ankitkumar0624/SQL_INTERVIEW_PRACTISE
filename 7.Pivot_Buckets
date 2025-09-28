@@ -1,0 +1,38 @@
+
+Write a SQL query to transform the data so that each fruit becomes 
+its own column (Apple, Mango, Orange, Guava, Cherry) 
+and the values should be ‘Yes’ if the person has 
+that fruit in their basket, otherwise ‘No’.
+
+drop table if exists basket;
+
+create table basket
+(
+  person_name varchar(100),
+  fruits_name varchar(100)
+);
+
+insert into basket
+values
+('ankit','apple,orange,mango'),
+('rakesh','grapes,papaya'),
+('hardika','strawberry');
+
+select * from basket;
+with split_fruits as (
+  select 
+    b.person_name,
+    ltrim(rtrim(s.value)) as fruit_name
+  from basket b
+  cross apply string_split(b.fruits_name, ',') s
+)
+select 
+  person_name,
+  max(case when fruit_name='apple' then 'YES' else 'NO' end) as apple,
+  max(case when fruit_name='orange' then 'YES' else 'NO' end) as orange,
+  max(case when fruit_name='mango' then 'YES' else 'NO' end) as mango,
+  max(case when fruit_name='grapes' then 'YES' else 'NO' end) as grapes,
+  max(case when fruit_name='papaya' then 'YES' else 'NO' end) as papaya,
+  max(case when fruit_name='strawberry' then 'YES' else 'NO' end) as strawberry
+from split_fruits
+group by person_name;
