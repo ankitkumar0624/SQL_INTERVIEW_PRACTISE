@@ -1,46 +1,53 @@
-📘 1. Learning Path for SQL Date & String Functions
-🔹 Step 1: Basics
+-- Get today’s date (only date, no time)
+SELECT CURRENT_DATE();          -- e.g., 2025-10-01
 
-Learn how to extract and format values.
+-- Get current date and time
+SELECT NOW();                   -- e.g., 2025-10-01 19:15:00
 
-YEAR(date), MONTH(date), DAY(date)
+-- Extract year, month, week number, and day from today’s date
+SELECT YEAR(CURRENT_DATE());    -- 2025
+SELECT MONTH(CURRENT_DATE());   -- 10
+SELECT WEEK(CURRENT_DATE());    -- Week number of the year, e.g., 40
+SELECT DAY(CURRENT_DATE());     -- Day of the month, e.g., 1
 
-DATEPART(), DATENAME()
+-- Format: DD-MM-YY
+SELECT DATE_FORMAT(CURRENT_DATE(), '%d-%m-%y');   -- 01-10-25
 
-LEN(), UPPER(), LOWER(), LTRIM(), RTRIM(), SUBSTRING()
+-- Format: DD-MM-YYYY
+SELECT DATE_FORMAT(CURRENT_DATE(), '%d-%m-%Y');   -- 01-10-2025
 
-👉 Example:
+-- Format: DD-MonthName-YYYY
+SELECT DATE_FORMAT(CURRENT_DATE(), '%d-%M-%Y');   -- 01-October-2025
 
-SELECT YEAR('2020-06-15') AS year, 
-       MONTH('2020-06-15') AS month,
-       LEN('   hello  ') AS length,
-       LTRIM('   hello  ') AS left_trimmed;
+-- Format: DD-AbbreviatedMonth-YYYY
+SELECT DATE_FORMAT(CURRENT_DATE(), '%d-%b-%Y');   -- 01-Oct-2025
 
-🔹 Step 2: Intermediate
+-- Get full weekday name
+SELECT DATE_FORMAT(CURRENT_DATE(), '%W');         -- Wednesday
 
-Learn arithmetic and manipulation
+-- Format: Day-AbbreviatedMonth-YYYY
+SELECT DATE_FORMAT(CURRENT_DATE(), '%e-%b-%Y');   -- 1-Oct-2025
 
-DATEADD(), DATEDIFF(), EOMONTH()
 
-REPLACE(), CHARINDEX(), LEFT(), RIGHT()
+-- Days difference between a future date and today
+SELECT DATEDIFF('2025-10-31', CURRENT_DATE());  -- e.g., 30
 
-👉 Example:
+-- Add 10 days to a specific date
+SELECT DATE_ADD('2025-10-01', INTERVAL 10 DAY);  -- 2025-10-11
 
-SELECT DATEADD(DAY, 7, '2020-06-15') AS plus_7_days,
-       DATEDIFF(DAY, '2020-06-01', '2020-06-15') AS days_between,
-       REPLACE('SQL IS FUN', 'FUN', 'POWERFUL') AS replaced;
+-- Subtract 10 days from a specific date
+SELECT DATE_SUB('2025-10-01', INTERVAL 10 DAY);  -- 2025-09-21
 
-🔹 Step 3: Advanced
+-- Last day of current month
+SELECT LAST_DAY(CURRENT_DATE());                 -- 2025-10-31
 
-Work with formatting & conversion
 
-FORMAT(), CONVERT(), CAST()
+-- Extract individual components using EXTRACT()
+SELECT EXTRACT(YEAR FROM CURRENT_DATE());       -- 2025
+SELECT EXTRACT(MONTH FROM CURRENT_DATE());      -- 10
+SELECT EXTRACT(WEEK FROM CURRENT_DATE());       -- 40
+SELECT EXTRACT(DAY FROM CURRENT_DATE());        -- 1
 
-STUFF(), PATINDEX()
 
-Time-zone aware: SYSDATETIMEOFFSET(), SWITCHOFFSET()
-
-👉 Example:
-
-SELECT FORMAT(GETDATE(), 'yyyy-MM-dd') AS formatted_date,
-       STUFF('123456', 2, 3, 'XYZ') AS stuffed;
+-- Convert string to DATE format using a pattern
+SELECT STR_TO_DATE('01-10-2025','%d-%m-%Y');    -- 2025-10-01
