@@ -15,7 +15,7 @@ insert into teams values
 with rnk_team as
 (select distinct *,dense_rank()over(order by team_name) as rnk 
  from teams) 
-select a.rnk,a.team_name,b.rnk,b.team_name
+select concat(a.team_name," ","VS"," ",b.team_name),a.rnk,a.team_name,b.rnk,b.team_name
 from rnk_team a 
 inner join rnk_team b on  a.rnk > b.rnk
 order by a.team_name
