@@ -17,6 +17,6 @@ with rnk_team as
  from teams) 
 select a.rnk,a.team_name,b.rnk,b.team_name
 from rnk_team a 
-inner join rnk_team b on  a.rnk !=b.rnk
+inner join rnk_team b on  a.rnk > b.rnk
 order by a.team_name
 ;
