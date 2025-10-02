@@ -1,0 +1,22 @@
+Write a SQL Query to Generate all possible unique match combinations between the team in the format. team1 vs team2
+
+
+create table teams(
+team_name varchar(100)); 
+
+insert into teams values 
+('CSK'), 
+('CSK'),
+('KKR'), 
+('DC'), 
+('LSG'), 
+('GT');
+
+with rnk_team as
+(select distinct *,dense_rank()over(order by team_name) as rnk 
+ from teams) 
+select a.rnk,a.team_name,b.rnk,b.team_name
+from rnk_team a 
+inner join rnk_team b on  a.rnk !=b.rnk
+order by a.team_name
+;
