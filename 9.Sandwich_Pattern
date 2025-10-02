@@ -1,0 +1,24 @@
+The question is asking you to find all unique values in a column NUMB that form a "sandwich pattern".
+👉 A "sandwich pattern" means:
+The same value appears at row i and row i+2
+The middle row (i+1) has a different value
+
+create TABLE NUM
+(SN int,
+NUMB int);
+insert into NUM VALUES
+(1,4),
+(2,7), 
+(3,4), 
+(4,9), 
+(5,9), 
+(6,7), 
+(7,9), 
+(8,4);
+select * from NUM;
+select a.sn,a.numb,b.sn,b.numb,c.sn,c.numb
+from num a 
+inner JOIN
+num b on a.sn=b.sn+2 and a.numb=b.numb
+inner join 
+num c on a.sn=c.sn+1 and a.numb != c.numb;
